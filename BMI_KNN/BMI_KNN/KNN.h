@@ -71,7 +71,7 @@ double calcDist(const gene& a, const gene& b)
 	{
 		sum += (a.expLevel[i] - b.expLevel[i])*(a.expLevel[i] - b.expLevel[i]);
 	}
-	sum /= 79;
+	sum /= COLUMNS;
 	return sum;
 }
 
@@ -83,6 +83,7 @@ public:
 	vector<gene> genes;
 	vector<string> experiments;
 
+	// gene의 정보를 출력하는 테스트코드
 	void printGenes()
 	{
 		for (int i = 0; i < genes.size(); i++)
@@ -91,6 +92,7 @@ public:
 		}
 	}
 
+	// experiments의 정보를 입력받는 함수.
 	void getExperiments(ifstream& in, int n)
 	{
 		char tmp[1024];
@@ -106,6 +108,7 @@ public:
 		//}
 	}
 
+	// gene들의 정보를 입력.
 	void intputSamples(ifstream& inputFile, ifstream& names, int n, int type)
 	{
 		int number;
@@ -122,12 +125,10 @@ public:
 			tmp.description = desc;
 			tmp.type = type;
 
-			//printf("%5d. %s\t : %d\n", i, name, type);
-
 			genes.push_back(tmp);
 		}
-		//cout << "size : " << genes.size() << endl;;
 	}
+
 	// K-nearest neighbor들 중에 Ribosomal의 비율이 p 이상이면 return true;
 	bool classification(const gene& g)
 	{
@@ -164,6 +165,7 @@ public:
 			return false;
 	}
 
+	// Cross Validation을 할 때 사용.
 	bool classificationForCV(const gene& g, vector<int>& v)
 	{
 		vector<geneDistance> d; // 다른 gene들과의 distance들을 저장하는 vector.
@@ -224,6 +226,7 @@ public:
 
 		vector<int> testset;
 		vector<int> FPList;
+
 		for (int i = 0; i < 6; i++)
 		{
 			//cout << "testset " << i << endl;
@@ -277,19 +280,30 @@ public:
 				}
 			}
 		}
-		cout << "TP : " << TP << endl;
+		/*cout << "TP : " << TP << endl;
 		cout << "TN : " << TN << endl;
 		cout << "FP : " << FP << endl;
 		cout << "FN : " << FN << endl;
-		
+		*/
 		double total = TP + TN + FP + FN;
 		double sensitivity = (double)TP / (double)(TP + FN); // ribosomal을 중에 ribosomal로 옳게 판단한 비율
 		double specificity = (double)TN / (double)(TN + FP); // nonribo들 중에 nonribo로 옳게 판단한 비율
-		double accuracy = (double)(TP + TN) / total;
+		double accuracy = (double)(TP + TN) / total; // 전체 중에 옳게 판단한 비율.
+		
+		cout << "K : " << K << endl;
+		cout << "p : " << p << endl;
+		cout << "sensitivity : " << sensitivity << endl;
+		cout << "specificity : " << specificity << endl;
+		cout << "accuracy : " << accuracy << endl;
 
-		cout << "1. Sensitivity = " << sensitivity << endl;
-		cout << "2. Specificity = " << specificity << endl;
-		//cout << "accuracy : " << accuracy << endl;
+		// knn.out 출력파일에 출력.
+		ofstream out;
+		out.open("knn.out");
+		out << "K : " << K << endl;
+		out << "p : " << p << endl;
+		out << "sensitivity : " << sensitivity << endl;
+		out << "specificity : " << specificity << endl;
+		out << "accuracy : " << accuracy << endl;
 
 		/*for (int i = 0; i < FPList.size(); i++)
 		{

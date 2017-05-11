@@ -19,8 +19,8 @@ int main()
 	knn.intputSamples(nonribodata, nonribonames, 2346, NONRIBO);
 	knn.getExperiments(experiments, COLUMNS);
 
-
-	knn.K = 5;
+	cout << "Insert K : ";
+	cin >> knn.K;
 	cout << "Insert p : ";
 	cin >> knn.p;
 
@@ -34,4 +34,5 @@ int main()
 	experiments.close();
 	ribonames.close();
 	nonribonames.close();
+	system("pause");
 }
